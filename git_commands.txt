@@ -1,0 +1,223 @@
+GIT COMMANDS - LOCAL GIT AND GITHUB WORKFLOW
+
+Project: git-workflow-login-assignment
+Repository: https://github.com/mohit-1710/git-workflow-login-assignment
+
+Commands below are in execution order. Repeated commands are retained.
+File creation and edits were performed locally with a Python script.
+All Git commands were run from the project directory.
+
+Environment inspection (before creating the project):
+git --version
+  Display the installed Git version.
+git config --get user.name
+  Read the existing default author name.
+git config --get user.email
+  Read the existing default author email; a local noreply address is used for this project.
+
+01. [setup]
+mkdir git-workflow-login-assignment
+  Create the project folder locally.
+
+02. [setup]
+pwd && ls -1
+  Show the local folder and the two HTML files before Git initialization.
+
+03. [setup]
+git init -b main
+  Initialize a local Git repository with main as its initial branch.
+
+04. [setup]
+git config user.name "Mohit"
+  Set the author name for this repository only.
+
+05. [setup]
+git config user.email "177807502+mohit-1710@users.noreply.github.com"
+  Use the GitHub noreply author email for this repository only.
+
+06. [setup]
+git remote -v
+  Confirm no GitHub remote exists at local initialization.
+
+07. [setup]
+git status --short
+  Show the two untracked HTML files.
+
+08. [commits]
+git add index.html about.html
+  Stage the two initial HTML files.
+
+09. [commits]
+git commit -m "Initial commit: add home and about pages"
+  Record the initial state of the project.
+
+10. [commits]
+git diff -- index.html
+  Show the home-page change before staging it.
+
+11. [commits]
+git add index.html
+  Stage the modified home page.
+
+12. [commits]
+git commit -m "Update home page introduction"
+  Create the second commit with the updated introduction.
+
+13. [branch]
+git branch feature
+  Create the required feature branch at the second commit.
+
+14. [branch]
+git switch feature
+  Switch from main to feature.
+
+15. [branch]
+git add about.html
+  Stage the change made on feature.
+
+16. [branch]
+git commit -m "Add branching details on feature branch"
+  Commit the about-page update on feature.
+
+17. [branch]
+git switch main
+  Return to main before merging.
+
+18. [branch]
+git merge --no-ff feature -m "Merge feature branch into main"
+  Merge feature and create an explicit merge commit so branch activity remains visible.
+
+19. [branch]
+git log --graph --oneline --decorate --all
+  Show both branch tips, the feature commit and the two-parent merge.
+
+20. [ignore]
+mkdir temp && touch debug.log temp/scratch.txt
+  Create harmless local sample files to verify both ignore rules.
+
+21. [ignore]
+cat .gitignore
+  Show the patterns for .log files and temp/.
+
+22. [ignore]
+git check-ignore -v debug.log temp/scratch.txt
+  Identify the exact ignore rule matching each sample file.
+
+23. [ignore]
+git status --short --ignored
+  Show .gitignore as untracked and the sample file/folder as ignored (!!).
+
+24. [ignore]
+git add .gitignore
+  Stage only the ignore rules, not the ignored sample files.
+
+25. [ignore]
+git commit -m "Ignore log files and temp folder"
+  Save the ignore configuration in the repository.
+
+26. [undo_before]
+git add index.html
+  Stage the temporary announcement for the undo demonstration.
+
+27. [undo_before]
+git commit -m "Add temporary announcement for undo demonstration"
+  Create the additional commit that will be undone.
+
+28. [undo_before]
+git show --format=short HEAD -- index.html
+  Show the temporary commit and the exact line it added.
+
+29. [undo_after]
+git revert --no-edit HEAD
+  Undo the last commit by adding an inverse commit, keeping both commits in history.
+
+30. [undo_after]
+git show --format=short HEAD -- index.html
+  Show the revert commit and the removal of the temporary line.
+
+31. [undo_after]
+git diff HEAD~2 HEAD -- index.html
+  Compare the file before the temporary commit with the reverted state; empty output means they match.
+
+32. [undo_after]
+git status --short
+  Confirm there are no uncommitted changes after the revert.
+
+33. [documentation]
+git add README.md git_commands.txt
+  Stage the project notes and complete command documentation.
+
+34. [documentation]
+git commit -m "Document Git workflow and assignment commands"
+  Commit the command documentation and project notes.
+
+35. [verification]
+git status --short
+  Check for uncommitted tracked or untracked files; empty output means the working tree is clean.
+
+36. [verification]
+git log --graph --oneline --decorate --all
+  Display the complete commit graph, including the feature branch and merge.
+
+37. [verification]
+git ls-files
+  List tracked files and confirm that debug.log and temp/ are absent.
+
+38. [github]
+gh repo create mohit-1710/git-workflow-login-assignment --public --description "Local-first Git workflow assignment with branching, merging, ignore rules and revert"
+  Create an empty public GitHub repository only after the local workflow is complete.
+
+39. [github]
+git remote add origin https://github.com/mohit-1710/git-workflow-login-assignment.git
+  Connect the existing local repository to the newly created GitHub repository.
+
+40. [github]
+git remote -v
+  Display the fetch and push URLs for origin.
+
+41. [github]
+git push -u origin main feature
+  Push main and feature, preserving both branch references and all reachable commits; set upstream tracking.
+
+42. [github]
+gh repo view mohit-1710/git-workflow-login-assignment --json nameWithOwner,url,visibility,defaultBranchRef
+  Verify the repository identity, public visibility and main default branch.
+
+43. [github]
+git ls-remote --heads origin
+  Read the remote branch commit IDs and compare them with the local branches.
+
+44. [github]
+git branch -vv
+  Display local branches, commit IDs and upstream tracking.
+
+45. [github]
+git status --short --branch
+  Confirm main tracks origin/main and the working tree has no pending changes.
+
+46. [verification]
+git rev-list --count main
+  Count all commits reachable from main, including the merged feature commit.
+
+47. [verification]
+git log --merges --format="%h %p %s"
+  Verify that the feature merge has two parent commits.
+
+48. [verification]
+git log -2 --oneline main~1
+  Display the revert commit and the temporary commit immediately before it.
+
+49. [verification]
+git diff main~3 main~1 -- index.html
+  Compare index.html before the temporary change and after its revert; empty output proves restoration.
+
+50. [verification]
+git fsck --full
+  Check the repository object database and commit connectivity for errors.
+
+NOTES
+--no-ff creates a visible merge commit instead of only moving the branch pointer.
+git revert preserves the original commit and records the inverse change in a new commit.
+*.log ignores matching filenames at any directory depth; temp/ ignores the folder.
+Commands beginning with gh use GitHub CLI; mkdir, touch, cat, pwd and ls are shell commands.
+They are included for context; they are not Git commands.
